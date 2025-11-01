@@ -18,7 +18,9 @@
 description = 'dubbo-qos-api'
 
 dependencies {
-    api project(':dubbo-remoting:dubbo-remoting-netty4')
-    api project(':dubbo-common')
+    // 使用 Dubbo 官方模块作为依赖
+    api "org.apache.dubbo:dubbo-remoting-netty4:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-common:${dubboVersion}"
+    
     testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
 }

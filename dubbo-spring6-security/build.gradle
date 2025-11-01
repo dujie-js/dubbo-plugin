@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-description = 'The dubbo-parent module of dubbo project'
+description = 'The dubbo-spring6-security module of dubbo project'
 
 // Spring 6 Security模块需要Java 17+
 java {
@@ -37,7 +37,10 @@ dependencies {
     implementation "org.springframework:spring-jcl:${spring6Version}"
     implementation "org.springframework:spring-expression:${spring6Version}"
     compileOnly "org.springframework:spring-test:${spring6Version}"
-    api project(':dubbo-plugin:dubbo-spring-security')
+    
+    // 项目内依赖
+    api project(':dubbo-spring-security')
+    
     // 使用 Spring Security 6 依赖
     implementation "org.springframework.security:spring-security-config:${springSecurity6Version}"
     implementation "org.springframework.security:spring-security-core:${springSecurity6Version}"
@@ -57,6 +60,7 @@ dependencies {
     compileOnly "org.springframework.boot:spring-boot-test:${springBoot3Version}"
     compileOnly "org.springframework.boot:spring-boot-test-autoconfigure:${springBoot3Version}"
     compileOnly "org.springframework.boot:spring-boot-starter-test:${springBoot3Version}"
-    compileOnly project(':dubbo-config:dubbo-config-spring6')
+    
+    compileOnly "org.apache.dubbo:dubbo-config-spring6:${dubboVersion}"
     testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
 }

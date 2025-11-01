@@ -15,10 +15,12 @@
  * limitations under the License.
  */
 
-description = 'The dubbo-parent module of dubbo project'
+description = 'The dubbo-mutiny module of dubbo project'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-triple')
+    // 使用 Dubbo 官方模块作为依赖
+    api "org.apache.dubbo:dubbo-rpc-triple:${dubboVersion}"
+    
     implementation "io.smallrye.reactive:mutiny:${mutinyVersion}"
     testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
 }

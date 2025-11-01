@@ -18,16 +18,24 @@
 description = 'dubbo-qos'
 
 dependencies {
-    api project(':dubbo-common')
-    api project(':dubbo-registry:dubbo-registry-api')
-    api project(':dubbo-config:dubbo-config-api')
-    api project(':dubbo-rpc:dubbo-rpc-dubbo')
-    api project(':dubbo-remoting:dubbo-remoting-netty4')
-    api project(':dubbo-serialization:dubbo-serialization-hessian2')
-    api project(':dubbo-serialization:dubbo-serialization-fastjson2')
-    api project(':dubbo-plugin:dubbo-qos-api')
-    api project(':dubbo-plugin:dubbo-native')
-    api project(':dubbo-metrics:dubbo-metrics-default')
+    // 使用 Dubbo 官方模块作为依赖
+    api "org.apache.dubbo:dubbo-common:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-registry-api:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-config-api:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-rpc-dubbo:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-remoting-netty4:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-serialization-hessian2:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-serialization-fastjson2:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-metrics-default:${dubboVersion}"
+    
+    // 添加 HTTP12 支持（用于 OpenAPIRequest 和 OpenAPIService）
+    api "org.apache.dubbo:dubbo-remoting-http12:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-rpc-triple:${dubboVersion}"
+    
+    // 项目内依赖
+    api project(':dubbo-qos-api')
+    api project(':dubbo-native')
+    
     testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
     implementation "org.apache.logging.log4j:log4j-api:${log4j2Version}"
 }

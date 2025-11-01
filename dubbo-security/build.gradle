@@ -19,12 +19,14 @@ plugins {
     id 'com.google.protobuf' version '0.9.4'
 }
 
-description = 'The dubbo-parent module of dubbo project'
+description = 'The dubbo-security module of dubbo project'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-api')
-    api project(':dubbo-rpc:dubbo-rpc-triple')
-    api project(':dubbo-common')
+    // 使用 Dubbo 官方模块作为依赖
+    api "org.apache.dubbo:dubbo-rpc-api:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-rpc-triple:${dubboVersion}"
+    api "org.apache.dubbo:dubbo-common:${dubboVersion}"
+    
     implementation "io.grpc:grpc-protobuf:${grpcVersion}"
     implementation "io.grpc:grpc-stub:${grpcVersion}"
     implementation "io.grpc:grpc-netty-shaded:${grpcVersion}"
@@ -34,7 +36,8 @@ dependencies {
     implementation "org.bouncycastle:bcpkix-jdk18on:${bouncycastleVersion}"
     // 添加 javax.annotation 支持（Java 9+ 需要）
     compileOnly "javax.annotation:javax.annotation-api:1.3.2"
-    testImplementation project(':dubbo-config:dubbo-config-api')
+    
+    testImplementation "org.apache.dubbo:dubbo-config-api:${dubboVersion}"
     testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
 }
 
@@ -49,12 +52,12 @@ protobuf {
         }
         dubbo {
             // 使用 dubbo-compiler 生成 Dubbo Triple 代码
-            path = project(':dubbo-plugin:dubbo-compiler').tasks.jar.outputs.files.singleFile.absolutePath
+            path = project(':dubbo-compiler').tasks.jar.outputs.files.singleFile.absolutePath
         }
     }
     generateProtoTasks {
         all().each { task ->
-            task.dependsOn ':dubbo-plugin:dubbo-compiler:jar'
+            task.dependsOn ':dubbo-compiler:jar'
             task.plugins {
                 grpc {}
                 dubbo {

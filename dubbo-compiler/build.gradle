@@ -39,8 +39,8 @@ dependencies {
     implementation "io.grpc:grpc-context:${grpcVersion}"
     implementation "com.google.protobuf:protobuf-java:${protobufJavaVersion}"
     testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
-
-    // 补全缺失的依赖
-    implementation "com.salesforce.servicelibs:grpc-contrib:${grpcContribVersion}"
+    
+    // Protoc plugin support
+    implementation "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
 }
 

@@ -1,66 +1,160 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 buildscript {
-    // 定义变量
     ext {
-        springBootVersion = '2.3.4.RELEASE'
-        springCloudAlibabaVersion = '2.2.6.RELEASE'
-        springCloudVersion = '2.2.6.RELEASE'
+        // Maven仓库配置
         ALI_REPOSITORY_URL = 'https://maven.aliyun.com/repository/public/'
     }
-    // 仓库地址
+    
     repositories {
-        // 先从阿里云maven仓库中去下载，没有再去maven中央仓库
-        maven {
-            url ALI_REPOSITORY_URL
-        }
+        maven { url ALI_REPOSITORY_URL }
         mavenCentral()
-
     }
-    // 构建时所需要的插件或者是其他的依赖
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
-    }
-
 }
-// 所有模块的总仓库地址
+
+// 所有项目的仓库配置
 allprojects {
-    // 在build.gradle文件中直接声明的依赖项、仓库地址等信息是项目自身需要的资源。
     repositories {
-        maven {
-            url ALI_REPOSITORY_URL
-        }
+        maven { url ALI_REPOSITORY_URL }
+        mavenCentral()
     }
 }
+
+// 子项目统一配置
 subprojects {
-    apply plugin: 'java'
-    apply plugin: 'war';
+    apply plugin: 'java-library'
     apply plugin: 'idea'
-    apply plugin: 'io.spring.dependency-management'
-    apply plugin: 'org.springframework.boot'
-    sourceCompatibility = 1.8
-    targetCompatibility = 1.8
+    apply plugin: 'maven-publish'
+    
+    // Java版本配置（默认为Java 8，某些模块会覆盖）
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+    
     // 指定编码格式
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
-    version = "1.0.0-SNAPSHOT"  // 开发版本： -SNAPSHOT 正式版本：.RELEASE
-    dependencies {
-        implementation 'com.alibaba:fastjson:1.2.78'
-        implementation 'io.springfox:springfox-boot-starter:3.0.0'
-        implementation 'org.apache.commons:commons-lang3:3.12.0'
-        implementation 'io.github.openfeign:feign-okhttp:11.6'
-        implementation 'com.alibaba.cloud:spring-cloud-starter-alibaba-nacos-discovery'
-        implementation 'com.squareup.okhttp3:okhttp:4.9.1'
-        implementation 'com.github.xiaoymin:knife4j-spring-boot-starter:3.0.3'
-
-        implementation 'io.github.openfeign:feign-okhttp:11.2'
-        testImplementation ("org.springframework.boot:spring-boot-starter-test:$springBootVersion")
-        implementation ("org.springframework.cloud:spring-cloud-starter-openfeign:$springCloudVersion")
-        compileOnly 'org.projectlombok:lombok:1.18.20'
-        implementation 'org.projectlombok:lombok:1.18.20'
-        annotationProcessor 'org.projectlombok:lombok:1.18.20'
-
+    
+    // 项目版本
+    version = "1.0.0-SNAPSHOT"
+    
+    // ===================================
+    // 版本管理 - 统一定义所有依赖版本
+    // ===================================
+    ext {
+        // Dubbo 核心版本（用于插件依赖的Dubbo核心模块）
+        dubboVersion = "3.3.2"  // 使用3.3.2，某些插件可能需要更高版本
+        
+        // 日志框架
+        log4j2Version = "2.24.3"
+        
+        // gRPC相关
+        grpcVersion = "1.68.1"
+        grpcContribVersion = "1.5.0"
+        
+        // Protobuf相关
+        protobufJavaVersion = "3.25.5"
+        protobufJavaUtilVersion = "3.25.5"
+        protobufProtocVersion = "3.25.5"
+        
+        // 缓存相关
+        cacheApiVersion = "1.1.1"
+        hazelcastVersion = "5.3.6"
+        
+        // JAX-RS相关
+        javaxWsRsApiVersion = "2.1.1"
+        resteasyJaxrsVersion = "3.15.6.Final"  // 3.15.9不存在，使用3.15.6
+        
+        // 响应式编程
+        reactiveStreamsVersion = "1.0.4"
+        reactorVersion = "3.6.12"
+        mutinyVersion = "2.6.2"
+        
+        // 安全相关
+        bouncycastleVersion = "1.78.1"
+        springSecurityVersion = "5.8.15"
+        springSecurity6Version = "6.4.2"
+        
+        // Jackson序列化
+        jacksonVersion = "2.18.2"
+        
+        // 验证框架
+        jakartaValidationApiVersion = "3.0.2"
+        validationApiVersion = "2.0.1.Final"
+        hibernateValidatorVersion = "6.2.5.Final"
+        
+        // JAXB相关
+        jaxbApiVersion = "2.3.1"
+        jaxbRuntimeVersion = "2.3.9"
+        jaxbImplVersion = "2.3.9"
+        jaxbCoreVersion = "2.3.0.1"
+        
+        // Servlet & WebSocket相关
+        javaxServletApiVersion = "4.0.1"
+        jakartaServletApiVersion = "6.0.0"
+        servletVersion = "4.0.1"
+        websocketApiVersion = "1.1"
+        jakartaWebsocketApiVersion = "2.1.0"
+        jakartaWebsocketClientApiVersion = "2.1.0"
+        
+        // Spring Framework相关
+        springVersion = "5.3.39"
+        springWebVersion = "5.3.39"
+        springWebmvcVersion = "5.3.39"
+        spring6Version = "6.2.0"
+        springBoot3Version = "3.4.1"
+        
+        // 测试框架
+        spockCoreVersion = "2.3-groovy-3.0"
+        spockVersion = "2.3-groovy-3.0"
+        mockitoJunitJupiterVersion = "5.14.2"
+        junitVersion = "4.13.2"
+        
+        // 其他工具库
+        commonsIoVersion = "2.18.0"
+        snakeyamlVersion = "2.2"
+        javaxElApiVersion = "3.0.0"
+        mcpVersion = "0.1.0"  // 修正MCP版本
+        
+        // Mustache模板引擎
+        mustacheVersion = "0.9.11"
     }
-    dependencyManagement {
-        imports {
-            mavenBom "com.alibaba.cloud:spring-cloud-alibaba-dependencies:${springCloudAlibabaVersion}"
+    
+    // 测试配置
+    test {
+        useJUnitPlatform()
+        testLogging {
+            events "passed", "skipped", "failed"
+            exceptionFormat "full"
+        }
+    }
+    
+    // 创建 sourcesJar 任务
+    tasks.register('sourcesJar', Jar) {
+        archiveClassifier = 'sources'
+        from sourceSets.main.allSource
+    }
+    
+    // Maven发布配置
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+                artifact sourcesJar
+            }
         }
     }
 }

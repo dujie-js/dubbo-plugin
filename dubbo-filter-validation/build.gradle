@@ -18,7 +18,9 @@
 description = 'The validation module of dubbo project'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-api')
+    // 使用 Dubbo 官方模块作为依赖
+    api "org.apache.dubbo:dubbo-rpc-api:${dubboVersion}"
+    
     implementation "jakarta.validation:jakarta.validation-api:${jakartaValidationApiVersion}"
     implementation "javax.validation:validation-api:${validationApiVersion}"
     testImplementation "org.hibernate:hibernate-validator:${hibernateValidatorVersion}"

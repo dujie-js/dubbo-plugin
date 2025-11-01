@@ -15,17 +15,19 @@
  * limitations under the License.
  */
 
-description = 'The dubbo-parent module of dubbo project'
+description = 'The dubbo-rest-jaxrs module of dubbo project'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-triple')
+    // 使用 Dubbo 官方模块作为依赖
+    api "org.apache.dubbo:dubbo-rpc-triple:${dubboVersion}"
+    
     implementation "javax.ws.rs:javax.ws.rs-api:${javaxWsRsApiVersion}"
     implementation "org.jboss.resteasy:resteasy-jaxrs:${resteasyJaxrsVersion}"
-    testImplementation project(':dubbo-remoting:dubbo-remoting-netty4')
+    
+    testImplementation "org.apache.dubbo:dubbo-remoting-netty4:${dubboVersion}"
     testImplementation "javax.xml.bind:jaxb-api:${jaxbApiVersion}"
     testImplementation "org.glassfish.jaxb:jaxb-runtime:${jaxbRuntimeVersion}"
     testImplementation "org.yaml:snakeyaml:${snakeyamlVersion}"
-    testImplementation project(':dubbo-rpc:dubbo-rpc-triple')
     testImplementation "com.google.protobuf:protobuf-java-util:${protobufJavaUtilVersion}"
     testImplementation "org.spockframework:spock-core:${spockCoreVersion}"
     testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"

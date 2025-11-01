@@ -15,10 +15,11 @@
  * limitations under the License.
  */
 
-description = 'The dubbo-parent module of dubbo project'
+description = 'The dubbo-plugin-loom module of dubbo project'
 
 dependencies {
-    compileOnly project(':dubbo-common')
+    // 使用 Dubbo 官方模块作为依赖
+    compileOnly "org.apache.dubbo:dubbo-common:${dubboVersion}"
 }
 
 // Loom requires Java 21+
