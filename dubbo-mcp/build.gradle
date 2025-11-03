@@ -41,7 +41,7 @@ dependencies {
     // 1. 从GitHub Releases下载jar并安装到本地Maven仓库
     // 2. 或添加特殊的Maven仓库
     compileOnly fileTree(dir: 'libs', include: ['*.jar'])  // 临时方案：从libs目录加载
-    // implementation "io.github.model-context-protocol:kotlin-sdk:${mcpVersion}"
+    implementation "io.modelcontextprotocol.sdk:mcp:${mcpVersion}"
     testImplementation "org.mockito:mockito-junit-jupiter:${mockitoJunitJupiterVersion}"
     testImplementation "junit:junit:${junitVersion}"
     testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"

@@ -49,14 +49,14 @@ subprojects {
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
     
     // 项目版本
-    version = "1.0.0-SNAPSHOT"
+    version = "3.3.5"
     
     // ===================================
     // 版本管理 - 统一定义所有依赖版本
     // ===================================
     ext {
         // Dubbo 核心版本（用于插件依赖的Dubbo核心模块）
-        dubboVersion = "3.3.2"  // 使用3.3.2，某些插件可能需要更高版本
+        dubboVersion = "3.3.5"  // 使用3.3.2，某些插件可能需要更高版本
         
         // 日志框架
         log4j2Version = "2.24.3"
@@ -127,7 +127,7 @@ subprojects {
         commonsIoVersion = "2.18.0"
         snakeyamlVersion = "2.2"
         javaxElApiVersion = "3.0.0"
-        mcpVersion = "0.1.0"  // 修正MCP版本
+        mcpVersion = "0.11.2"  // 修正MCP版本
         
         // Mustache模板引擎
         mustacheVersion = "0.9.11"
