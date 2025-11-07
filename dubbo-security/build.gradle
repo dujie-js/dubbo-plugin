@@ -16,39 +16,47 @@
  */
 
 plugins {
-    id 'com.google.protobuf' version '0.9.4'
+    id 'com.google.protobuf'  // Version inherited from root project (0.8.18 for Gradle 6.5+ compatibility)
 }
 
-description = 'The dubbo-parent module of dubbo project'
+description = 'The security module of Dubbo project providing SSL/TLS support'
 
 dependencies {
     api project(':dubbo-rpc:dubbo-rpc-api')
     api project(':dubbo-rpc:dubbo-rpc-triple')
     api project(':dubbo-common')
-    implementation "io.grpc:grpc-protobuf:${grpcVersion}"
-    implementation "io.grpc:grpc-stub:${grpcVersion}"
-    implementation "io.grpc:grpc-netty-shaded:${grpcVersion}"
-    implementation "com.google.protobuf:protobuf-java:${protobufJavaVersion}"
-    implementation "com.google.protobuf:protobuf-java-util:${protobufJavaVersion}"
-    implementation "org.bouncycastle:bcprov-jdk18on:${bouncycastleVersion}"
-    implementation "org.bouncycastle:bcpkix-jdk18on:${bouncycastleVersion}"
-    // 添加 javax.annotation 支持（Java 9+ 需要）
-    compileOnly "javax.annotation:javax.annotation-api:1.3.2"
+    
+    // gRPC dependencies
+    implementation libs.grpcProtobuf
+    implementation libs.grpcStub
+    implementation libs.grpcNettyShaded
+    
+    // Protobuf dependencies
+    implementation libs.protobufJava
+    implementation libs.protobufJavaUtil
+    
+    // BouncyCastle security dependencies
+    implementation libs.bouncycastleBcprovJdk18on
+    implementation libs.bouncycastleBcpkixJdk18on
+    
+    // Add javax.annotation support (required for Java 9+)
+    compileOnly libs.javaxAnnotationApi
+    
     testImplementation project(':dubbo-config:dubbo-config-api')
-    testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
+    testImplementation libs.log4jSlf4jImpl
 }
 
-// Protobuf 配置
+// Protobuf configuration
 protobuf {
     protoc {
-        artifact = "com.google.protobuf:protoc:${protobufProtocVersion}"
+        artifact = "com.google.protobuf:protoc:${libs.versions.protobufProtoc.get()}"
     }
     plugins {
         grpc {
-            artifact = "io.grpc:protoc-gen-grpc-java:${grpcVersion}"
+            artifact = "io.grpc:protoc-gen-grpc-java:${libs.versions.grpc.get()}"
         }
         dubbo {
-            // 使用 dubbo-compiler 生成 Dubbo Triple 代码
+            // Use dubbo-compiler to generate Dubbo Triple code
             path = project(':dubbo-plugin:dubbo-compiler').tasks.jar.outputs.files.singleFile.absolutePath
         }
     }
@@ -66,7 +74,7 @@ protobuf {
     generatedFilesBaseDir = "$buildDir/generated/source/proto"
 }
 
-// 配置源代码集，包含生成的 Protobuf 代码
+// Configure source sets, including generated Protobuf code
 sourceSets {
     main {
         java {
@@ -79,12 +87,12 @@ sourceSets {
     }
 }
 
-// 确保编译前生成 Protobuf 代码
+// Ensure Protobuf code is generated before compilation
 tasks.named('compileJava') {
     dependsOn 'generateProto'
 }
 
-// 确保 sourcesJar 在 Protobuf 生成后执行
+// Ensure sourcesJar executes after Protobuf generation
 tasks.named('sourcesJar') {
     dependsOn 'generateProto'
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE

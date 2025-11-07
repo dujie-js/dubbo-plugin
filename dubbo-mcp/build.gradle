@@ -15,9 +15,9 @@
  * limitations under the License.
  */
 
-description = 'The dubbo-parent module of dubbo project'
+description = 'The MCP (Model Context Protocol) integration module'
 
-// MCP模块需要Java 17+ (使用了pattern matching特性)
+// MCP module requires Java 17+ (uses pattern matching features)
 java {
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
@@ -30,10 +30,9 @@ tasks.withType(JavaCompile) {
 dependencies {
     api project(':dubbo-plugin:dubbo-rest-openapi')
     api project(':dubbo-plugin:dubbo-filter-cache')
-    implementation "io.modelcontextprotocol.sdk:mcp:${mcpVersion}"
+    implementation libs.mcpSdk
     api project(':dubbo-config:dubbo-config-api')
     api project(':dubbo-common')
-    testImplementation "org.mockito:mockito-junit-jupiter:${mockitoJunitJupiterVersion}"
-    testImplementation "junit:junit:${junitVersion}"
-    testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
+    testImplementation libs.mockitoJunitJupiter
+    testImplementation libs.log4jSlf4jImpl
 }

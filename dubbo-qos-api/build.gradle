@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-description = 'dubbo-qos-api'
+description = 'The QoS (Quality of Service) API module'
 
 dependencies {
     api project(':dubbo-remoting:dubbo-remoting-netty4')
     api project(':dubbo-common')
-    testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
+    testImplementation libs.log4jSlf4jImpl
 }

@@ -15,16 +15,27 @@
  * limitations under the License.
  */
 
-description = 'The dubbo-parent module of dubbo project'
+description = 'The Spring Security integration module for Dubbo'
+
+// ========================================
+// This module uses Spring Security 5.x (default version)
+// All dependencies use libs.springSecurityXxx and libs.jacksonXxx
+// ========================================
 
 dependencies {
     api project(':dubbo-rpc:dubbo-rpc-api')
     api project(':dubbo-common')
     api project(':dubbo-cluster')
-    implementation "org.springframework.security:spring-security-core:${springSecurityVersion}"
-    compileOnly "org.springframework.security:spring-security-oauth2-client:${springSecurityVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}"
-    implementation "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}"
-    testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
+    
+    // Spring Security 5.x dependencies
+    implementation libs.springSecurityCore
+    compileOnly libs.springSecurityOauth2Client
+    
+    // Jackson dependencies
+    implementation libs.jacksonCore
+    implementation libs.jacksonDatatypeJsr310
+    implementation libs.jacksonDatabind
+    
+    // Test dependencies
+    testImplementation libs.log4jSlf4jImpl
 }

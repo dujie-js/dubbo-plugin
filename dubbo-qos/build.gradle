@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-description = 'dubbo-qos'
+description = 'The QoS (Quality of Service) module providing runtime management and monitoring'
 
 dependencies {
     api project(':dubbo-common')
@@ -28,6 +28,8 @@ dependencies {
     api project(':dubbo-plugin:dubbo-qos-api')
     api project(':dubbo-plugin:dubbo-native')
     api project(':dubbo-metrics:dubbo-metrics-default')
-    testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
-    implementation "org.apache.logging.log4j:log4j-api:${log4j2Version}"
+    
+    compileOnly libs.log4jApi
+    testImplementation libs.log4jApi
+    testImplementation libs.log4jSlf4jImpl
 }

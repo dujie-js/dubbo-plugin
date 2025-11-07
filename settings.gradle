@@ -1,1 +1,36 @@
 rootProject.name = 'dubbo-plugin'
+
+// Plugin modules
+include 'dubbo-qos'
+include 'dubbo-qos-api'
+include 'dubbo-auth'
+include 'dubbo-reactive'
+include 'dubbo-security'
+include 'dubbo-spring-security'
+include 'dubbo-native'
+include 'dubbo-compiler'
+include 'dubbo-filter-cache'
+include 'dubbo-filter-validation'
+include 'dubbo-rest-jaxrs'
+include 'dubbo-rest-spring'
+include 'dubbo-rest-openapi'
+include 'dubbo-triple-servlet'
+include 'dubbo-triple-websocket'
+
+// ========================================
+// JDK Version-Specific Modules (Consistent with Maven Profiles)
+// ========================================
+def javaVersion = JavaVersion.current()
+
+// JDK 17+ modules (mcp, mcp-demo, spring6, mutiny, spring-boot-3)
+if (javaVersion >= JavaVersion.VERSION_17) {
+    include 'dubbo-spring6-security'
+    include 'dubbo-mutiny'
+    include 'dubbo-mcp'               // Requires JDK 17+ (pattern matching)
+}
+
+// JDK 21+ modules (loom - Virtual Threads)
+// Note: Gradle 7.4 doesn't have VERSION_21 constant, use majorVersion comparison
+if (javaVersion.isCompatibleWith(JavaVersion.VERSION_17) && javaVersion.majorVersion.toInteger() >= 21) {
+    include 'dubbo-plugin-loom'
+}

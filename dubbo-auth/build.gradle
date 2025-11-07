@@ -15,10 +15,10 @@
  * limitations under the License.
  */
 
-description = 'The dubbo-parent module of dubbo project'
+description = 'The authentication module providing access control'
 
 dependencies {
     api project(':dubbo-common')
     api project(':dubbo-rpc:dubbo-rpc-api')
-    testImplementation "org.apache.logging.log4j:log4j-slf4j-impl:${log4j2Version}"
+    testImplementation libs.log4jSlf4jImpl
 }
