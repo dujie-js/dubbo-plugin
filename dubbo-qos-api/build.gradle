@@ -18,7 +18,7 @@
 description = 'The QoS (Quality of Service) API module'
 
 dependencies {
-    api project(':dubbo-remoting:dubbo-remoting-netty4')
-    api project(':dubbo-common')
+    api libs.dubboRemotingNetty4
+    api libs.dubboCommon
     testImplementation libs.log4jSlf4jImpl
 }

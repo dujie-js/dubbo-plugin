@@ -18,7 +18,7 @@
 description = 'The validation filter module of Dubbo project'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-api')
+    api libs.dubboRpcApi
     
     // Support both javax and jakarta validation API (for different Java/Spring versions)
     implementation libs.jakartaValidationApi

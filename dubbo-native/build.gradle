@@ -18,7 +18,7 @@
 description = 'The native image support module for GraalVM compatibility'
 
 dependencies {
-    api project(':dubbo-common')
+    api libs.dubboCommon
     implementation libs.commonsIo
     testImplementation libs.log4jSlf4jImpl
 }

@@ -18,8 +18,8 @@
 description = 'The WebSocket transport support module for Triple protocol'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-triple')
-    api project(':dubbo-remoting:dubbo-remoting-websocket')
+    api libs.dubboRpcTriple
+    api libs.dubboRemotingWebsocket
     
     // Support both javax and jakarta APIs, differentiated by package:
     // - org.apache.dubbo.rpc.protocol.tri.websocket.*         → javax API (Spring Boot 2.x)
@@ -34,7 +34,7 @@ dependencies {
     compileOnly libs.jakartaWebsocketApi
     compileOnly libs.jakartaWebsocketClientApi
     
-    testImplementation project(':dubbo-remoting:dubbo-remoting-netty4')
+    testImplementation libs.dubboRemotingNetty4
 }
 
 // Generate Jakarta EE version of sources (only when JDK 17+)

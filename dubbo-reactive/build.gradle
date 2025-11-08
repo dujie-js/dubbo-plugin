@@ -18,7 +18,7 @@
 description = 'The Reactor reactive streams integration module'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-triple')
+    api libs.dubboRpcTriple
     
     // Reactive Streams and Reactor dependencies
     implementation libs.reactiveStreams

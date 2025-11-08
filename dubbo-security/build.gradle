@@ -22,9 +22,9 @@ plugins {
 description = 'The security module of Dubbo project providing SSL/TLS support'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-api')
-    api project(':dubbo-rpc:dubbo-rpc-triple')
-    api project(':dubbo-common')
+    api libs.dubboRpcApi
+    api libs.dubboRpcTriple
+    api libs.dubboCommon
     
     // gRPC dependencies
     implementation libs.grpcProtobuf
@@ -42,7 +42,7 @@ dependencies {
     // Add javax.annotation support (required for Java 9+)
     compileOnly libs.javaxAnnotationApi
     
-    testImplementation project(':dubbo-config:dubbo-config-api')
+    testImplementation libs.dubboConfigApi
     testImplementation libs.log4jSlf4jImpl
 }
 
@@ -57,12 +57,12 @@ protobuf {
         }
         dubbo {
             // Use dubbo-compiler to generate Dubbo Triple code
-            path = project(':dubbo-plugin:dubbo-compiler').tasks.jar.outputs.files.singleFile.absolutePath
+            path = project(':dubbo-compiler').tasks.jar.outputs.files.singleFile.absolutePath
         }
     }
     generateProtoTasks {
         all().each { task ->
-            task.dependsOn ':dubbo-plugin:dubbo-compiler:jar'
+            task.dependsOn ':dubbo-compiler:jar'
             task.plugins {
                 grpc {}
                 dubbo {

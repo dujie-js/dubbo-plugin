@@ -16,17 +16,26 @@
  */
 
 plugins {
+    // Core plugins for building and publishing
     id 'java-library'
     id 'maven-publish'
     id 'signing'
-    id 'checkstyle'
-    id 'jacoco'
-    alias(libs.plugins.shadow) apply false
+    
+    // Code generation and documentation
     alias(libs.plugins.protobuf) apply false
     alias(libs.plugins.javadoc) apply false
-    alias(libs.plugins.release)
+    
+    // Code quality and formatting
     alias(libs.plugins.spotless) apply false
-    alias(libs.plugins.licenseReport)
+    
+    // Publishing and release management
+    alias(libs.plugins.release)              // 自动化版本号管理和发布流程
+    alias(libs.plugins.licenseReport)        // 检查依赖许可证合规性
+    alias(libs.plugins.shadow) apply false   // 创建 fat JAR（某些模块可能需要）
+    
+    // Removed plugins (not needed for standalone plugin project):
+    // - checkstyle: No configuration file available (codestyle/checkstyle.xml missing)
+    // - jacoco: Code coverage not required for development phase
 }
 
 allprojects {
@@ -46,7 +55,7 @@ subprojects {
     def isPlatformProject = project.name.contains('bom') ||
             project.name.contains('dependencies-all')
 
-    // Shared exclusion list for code quality tools (Spotless and Checkstyle)
+    // Shared exclusion list for code quality tools (Spotless)
     // These files are either copied from third-party or have special formatting requirements
     def spotlessExcludes = [
             'src/main/java/org/apache/dubbo/common/threadlocal/InternalThreadLocal.java',
@@ -63,35 +72,12 @@ subprojects {
             'src/main/java/org/apache/dubbo/rpc/protocol/tri/rest/cors/CorsHeaderFilter.java'
     ]
 
-    // Checkstyle has additional exclusions beyond Spotless
-    def checkstyleExtraExcludes = [
-            '**/JSONWriter.java',
-            '**/org/apache/dubbo/maven/plugin/aot/**',
-            '**/org/apache/dubbo/aot/generate/BasicJsonWriter.java',
-            '**/org/apache/dubbo/aot/api/ExecutableMode.java',
-            '**/org/apache/dubbo/aot/api/MemberCategory.java',
-            '**/org/apache/dubbo/common/threadpool/serial/SerializingExecutor.java',
-            '**/org/apache/dubbo/common/serialize/protobuf/support/wrapper/**',
-            '**/org/apache/dubbo/triple/TripleWrapper.java',
-            '**/org/apache/dubbo/metrics/aggregate/DubboMergingDigest.java',
-            '**/org/apache/dubbo/metrics/aggregate/DubboAbstractTDigest.java',
-            '**/org/apache/dubbo/common/logger/helpers/**',
-            '**/org/apache/dubbo/maven/plugin/protoc/DubboProtocCompilerMojo.java',
-            '**/org/apache/dubbo/gen/utils/ProtoTypeMap.java',
-            '**/istio/v1/auth/**',
-            '**/com/google/rpc/**',
-            '**/grpc/health/**',
-            '**/grpc/reflection/**'
-    ]
-
     if (!isPlatformProject) {
         // --------------------------------------------------------------------------------
         //  Plugin Application
         // --------------------------------------------------------------------------------
         apply plugin: 'java-library'
         apply plugin: 'com.diffplug.spotless'
-        apply plugin: 'checkstyle'
-        apply plugin: 'jacoco'
 
         def skipSpotless = project.hasProperty('skip-spotless') ||
                 project.hasProperty('skipSpotless')
@@ -124,52 +110,8 @@ subprojects {
                     .configureEach { enabled = false }
         }
 
-        // Checkstyle: Code Style Verification
-        checkstyle {
-            toolVersion = libs.versions.checkstyle.get()
-            configFile = rootProject.file('codestyle/checkstyle.xml')
-            configProperties = ['checkstyle.suppressions.file': rootProject.file('codestyle/checkstyle-suppressions.xml')]
-            showViolations = true
-            ignoreFailures = false
-            maxWarnings = 0
-        }
-
-        checkstyleMain {
-            enabled = !(project.hasProperty('checkstyle.skip') && project.property('checkstyle.skip') == 'true')
-            source = 'src/main/java'
-            // Convert Spotless path-based excludes to Checkstyle pattern-based excludes
-            def spotlessPatterns = spotlessExcludes.collect { it.replace('src/main/java/', '').replace('src/test/java/', '') }
-            exclude(*(spotlessPatterns + checkstyleExtraExcludes + ['**/generated/**', '**/generated-sources/**']))
-        }
-
-        checkstyleTest {
-            enabled = !(project.hasProperty('checkstyle.skip') && project.property('checkstyle.skip') == 'true')
-            source = 'src/test/java'
-        }
-
-        // Checkstyle Unix: Line Ending Verification
-        tasks.register('checkstyleUnix', Checkstyle) {
-            description = 'Run Checkstyle Unix line ending checks'
-            group = 'verification'
-            enabled = !project.hasProperty('checkstyle_unix.skip') || project.property('checkstyle_unix.skip') != 'true'
-            configFile = rootProject.file('codestyle/checkstyle_unix.xml')
-
-            // Use doFirst to set source files dynamically
-            doFirst {
-                source = fileTree(projectDir) {
-                    include '**/*.java', '**/*.xml', '**/*.properties', '**/*.gradle', '**/*.sh', '**/*.yml', '**/*.yaml'
-                    exclude '**/target/**', '**/build/**', '**/generated/**', '**/generated-sources/**', '**/.gradle/**', '**/.git/**'
-                }
-            }
-
-            reports {
-                xml.required = true
-                html.required = true
-            }
-            showViolations = true
-            ignoreFailures = false
-        }
-
+        // Checkstyle configuration removed (codestyle/checkstyle.xml not available in standalone project)
+        
         // Combine check task configuration in one place
         tasks.named('check').configure {
             // Remove spotless from default check
@@ -177,8 +119,6 @@ subprojects {
                 (dep instanceof TaskProvider && dep.name == 'spotlessCheck') ||
                         (dep instanceof String && dep == 'spotlessCheck')
             }
-            // Add checkstyleUnix
-            dependsOn tasks.named('checkstyleUnix')
         }
         // -Ptest.minHeap=512m -Ptest.maxHeap=1024m -Ptest.metaspace=256m (optimized for stability)
         def testMinHeap = project.findProperty('test.minHeap') ?: '512m'
@@ -201,40 +141,9 @@ subprojects {
                         '--add-opens=java.base/java.util=ALL-UNNAMED'
                 ]
             }
-
-            jacoco {
-                enabled = !project.hasProperty('jacoco.skip') || project.property('jacoco.skip') != 'true'
-                destinationFile = layout.buildDirectory.file("jacoco/test.exec").get().asFile
-            }
-
-            finalizedBy jacocoTestReport
         }
-
-        jacocoTestReport {
-            dependsOn test
-            enabled = !project.hasProperty('jacoco.skip') || project.property('jacoco.skip') != 'true'
-            reports {
-                xml.required = true
-                html.required = true
-                csv.required = false
-            }
-            afterEvaluate {
-                classDirectories.setFrom(files(classDirectories.files.collect {
-                    fileTree(dir: it, exclude: ['**/generated/**', '**/generated-sources/**', '**/org/apache/dubbo/demo/**'])
-                }))
-            }
-        }
-
-        jacocoTestCoverageVerification {
-            enabled = false
-            violationRules {
-                rule {
-                    limit {
-                        minimum = 0.0
-                    }
-                }
-            }
-        }
+        
+        // Jacoco (code coverage) configuration removed for standalone project
         // Java Configuration
         java {
             sourceCompatibility = JavaVersion.VERSION_1_8
@@ -257,7 +166,7 @@ subprojects {
             testImplementation libs.awaitility
             testImplementation libs.hamcrest
             testImplementation libs.mockitoCore
-            testImplementation libs.mockitoInline
+            // mockitoInline is included in mockitoCore 5.x
         }
 
         // Dubbo uses custom logger adapter to support multiple logging frameworks
@@ -435,53 +344,12 @@ git.commit.id=${getGitCommitId()}
 // ROOT PROJECT CONFIGURATION
 // ================================================================================
 
-// JaCoCo: Code Coverage (applies to all projects)
-allprojects {
-    pluginManager.withPlugin('jacoco') {
-        jacoco {
-            toolVersion = "0.8.13"
-        }
-    }
-}
+// JaCoCo: Code Coverage - Removed for standalone project
+// Code coverage can be re-enabled by adding 'jacoco' plugin and related configuration
 
-tasks.register('jacocoRootReport', JacocoReport) {
-    description = 'Generates an aggregate JaCoCo coverage report from all subprojects'
-    group = 'verification'
-
-    onlyIf {
-        !project.hasProperty('jacoco.skip') || project.property('jacoco.skip') != 'true'
-    }
-
-    doFirst {
-        executionData fileTree(project.rootDir.absolutePath).include("**/build/jacoco/*.exec")
-        def sourceFiles = []
-        def classFiles = []
-        allprojects.each { p ->
-            if (p.plugins.hasPlugin('java')) {
-                p.sourceSets.main.allSource.srcDirs.each { sourceFiles << it }
-                classFiles << p.sourceSets.main.output
-            }
-        }
-        sourceDirectories.setFrom(files(sourceFiles))
-        classDirectories.setFrom(files(classFiles))
-    }
-
-    reports {
-        xml.required = true
-        html.required = true
-        csv.required = false
-        xml.destination layout.buildDirectory.file("reports/jacoco/aggregate/jacocoTestReport.xml").get().asFile
-        html.destination layout.buildDirectory.dir("reports/jacoco/aggregate/html").get().asFile
-    }
-}
-
-gradle.projectsEvaluated {
-    def testTasks = allprojects.findAll { it.tasks.findByName('test') }.collect { it.tasks.test }
-    tasks.named('jacocoRootReport').configure {
-        dependsOn testTasks
-    }
-}
-
+// ================================================================================
+// License Report: Dependency License Compliance Check
+// ================================================================================
 licenseReport {
     outputDir = layout.buildDirectory.dir("reports/dependency-license").get().asFile.absolutePath
     renderers = [

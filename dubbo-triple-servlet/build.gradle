@@ -18,7 +18,7 @@
 description = 'The Servlet API integration module for Triple protocol'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-triple')
+    api libs.dubboRpcTriple
     
     // Support both javax.servlet and jakarta.servlet APIs, differentiated by package:
     // - org.apache.dubbo.rpc.protocol.tri.servlet.*         → javax.servlet (Spring Boot 2.x)
@@ -29,7 +29,7 @@ dependencies {
     compileOnly libs.jakartaServletApi      // jakarta.servlet (Spring Boot 3.x)
     compileOnly libs.servletApi             // javax.servlet-api
     
-    testImplementation project(':dubbo-remoting:dubbo-remoting-netty4')
+    testImplementation libs.dubboRemotingNetty4
     testImplementation libs.log4jSlf4jImpl
 }
 
@@ -64,19 +64,20 @@ if (JavaVersion.current() >= JavaVersion.VERSION_17) {
                 into restServletJakartaDir
             }
             
-            // Replace package names and imports
-            fileTree(generatedSourcesDir).matching {
-                include '**/*.java'
-            }.each { file ->
-                def content = file.text
-                // Replace package declaration
-                content = content.replaceAll(/\.servlet;/, '.servlet.jakarta;')
-                // Replace imports
-                content = content.replaceAll(/javax\.servlet/, 'jakarta.servlet')
-                
-                // Special handling for ServletHttpRequestAdapter.java
-                if (file.name == 'ServletHttpRequestAdapter.java') {
-                    content = content.replace('/* jakarta placeholder */', '''@Override
+            // Replace package names and imports (only in jakarta directories to avoid double-replacement)
+            [servletJakartaDir, restServletJakartaDir].each { jakartaDir ->
+                fileTree(jakartaDir).matching {
+                    include '**/*.java'
+                }.each { file ->
+                    def content = file.text
+                    // Replace package declaration
+                    content = content.replaceAll(/\.servlet;/, '.servlet.jakarta;')
+                    // Replace imports
+                    content = content.replaceAll(/javax\.servlet/, 'jakarta.servlet')
+                    
+                    // Special handling for ServletHttpRequestAdapter.java
+                    if (file.name == 'ServletHttpRequestAdapter.java') {
+                        content = content.replace('/* jakarta placeholder */', '''@Override
     public String getRequestId() {
         return "";
     }
@@ -90,19 +91,20 @@ if (JavaVersion.current() >= JavaVersion.VERSION_17) {
     public jakarta.servlet.ServletConnection getServletConnection() {
         return null;
     }''')
+                    }
+                    
+                    // Special handling for ServletHttpMessageAdapterFactory.java priority
+                    if (file.name == 'ServletHttpMessageAdapterFactory.java') {
+                        content = content.replace('-100', '-200')
+                    }
+                    
+                    // Special handling for FilterAdapter.java id
+                    if (file.name == 'FilterAdapter.java') {
+                        content = content.replace('"servlet', '"jakarta-servlet')
+                    }
+                    
+                    file.text = content
                 }
-                
-                // Special handling for ServletHttpMessageAdapterFactory.java priority
-                if (file.name == 'ServletHttpMessageAdapterFactory.java') {
-                    content = content.replace('-100', '-200')
-                }
-                
-                // Special handling for FilterAdapter.java id
-                if (file.name == 'FilterAdapter.java') {
-                    content = content.replace('"servlet', '"jakarta-servlet')
-                }
-                
-                file.text = content
             }
         }
     }

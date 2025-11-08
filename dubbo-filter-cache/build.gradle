@@ -18,7 +18,7 @@
 description = 'The cache filter module of Dubbo project'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-api')
+    api libs.dubboRpcApi
     implementation libs.jcache
     testImplementation libs.hazelcast
     testImplementation libs.log4jSlf4jImpl

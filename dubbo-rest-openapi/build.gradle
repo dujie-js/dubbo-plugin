@@ -18,7 +18,7 @@
 description = 'The OpenAPI/Swagger documentation support module'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-triple')
+    api libs.dubboRpcTriple
     implementation libs.swaggerAnnotationsV3
     implementation libs.swaggerUi
     implementation libs.redoc

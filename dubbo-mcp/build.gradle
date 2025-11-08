@@ -28,11 +28,19 @@ tasks.withType(JavaCompile) {
 }
 
 dependencies {
-    api project(':dubbo-plugin:dubbo-rest-openapi')
-    api project(':dubbo-plugin:dubbo-filter-cache')
+    // 项目内依赖（在当前 dubbo-plugin 项目中的模块）
+    api project(':dubbo-rest-openapi')
+    api project(':dubbo-filter-cache')
+    
+    // 使用 Dubbo 官方 Maven 模块作为外部依赖
+    api libs.dubboConfigApi
+    api libs.dubboCommon
+    
+    // MCP SDK 外部依赖
     implementation libs.mcpSdk
-    api project(':dubbo-config:dubbo-config-api')
-    api project(':dubbo-common')
+    
+    // 测试依赖
     testImplementation libs.mockitoJunitJupiter
+    testImplementation libs.junitJupiterApi
     testImplementation libs.log4jSlf4jImpl
 }

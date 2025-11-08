@@ -23,9 +23,9 @@ description = 'The Spring Security integration module for Dubbo'
 // ========================================
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-api')
-    api project(':dubbo-common')
-    api project(':dubbo-cluster')
+    api libs.dubboRpcApi
+    api libs.dubboCommon
+    api libs.dubboCluster
     
     // Spring Security 5.x dependencies
     implementation libs.springSecurityCore

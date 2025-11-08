@@ -18,17 +18,17 @@
 description = 'The JAX-RS REST protocol support module'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-triple')
+    api libs.dubboRpcTriple
     
     // JAX-RS dependencies
     implementation libs.rsApi
     implementation libs.resteasyJaxrs
     
-    testImplementation project(':dubbo-remoting:dubbo-remoting-netty4')
+    testImplementation libs.dubboRemotingNetty4
     testImplementation libs.jaxbApi
     testImplementation libs.jaxbRuntime
     testImplementation libs.snakeyaml
-    testImplementation project(':dubbo-rpc:dubbo-rpc-triple')
+    testImplementation libs.dubboRpcTriple
     testImplementation libs.protobufJavaUtil
     testImplementation libs.spockCore
     testImplementation libs.log4jSlf4jImpl

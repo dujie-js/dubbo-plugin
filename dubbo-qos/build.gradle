@@ -18,16 +18,16 @@
 description = 'The QoS (Quality of Service) module providing runtime management and monitoring'
 
 dependencies {
-    api project(':dubbo-common')
-    api project(':dubbo-registry:dubbo-registry-api')
-    api project(':dubbo-config:dubbo-config-api')
-    api project(':dubbo-rpc:dubbo-rpc-dubbo')
-    api project(':dubbo-remoting:dubbo-remoting-netty4')
-    api project(':dubbo-serialization:dubbo-serialization-hessian2')
-    api project(':dubbo-serialization:dubbo-serialization-fastjson2')
-    api project(':dubbo-plugin:dubbo-qos-api')
-    api project(':dubbo-plugin:dubbo-native')
-    api project(':dubbo-metrics:dubbo-metrics-default')
+    api libs.dubboCommon
+    api libs.dubboRegistryApi
+    api libs.dubboConfigApi
+    api libs.dubboRpcDubbo
+    api libs.dubboRemotingNetty4
+    api libs.dubboSerializationHessian2
+    api libs.dubboSerializationFastjson2
+    api project(':dubbo-qos-api')
+    api project(':dubbo-native')
+    api libs.dubboMetricsDefault
     
     compileOnly libs.log4jApi
     testImplementation libs.log4jApi

@@ -18,9 +18,9 @@
 description = 'The Spring MVC REST protocol support module'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-triple')
-    api project(':dubbo-config:dubbo-config-spring')
-    api project(':dubbo-plugin:dubbo-triple-servlet')
+    api libs.dubboRpcTriple
+    api libs.dubboConfigSpring
+    api project(':dubbo-triple-servlet')
     
     // Spring 5.x dependencies (default version)
     compileOnly libs.servletApi
@@ -28,10 +28,10 @@ dependencies {
     implementation libs.springWeb
     compileOnly libs.springWebmvc
     
-    testImplementation project(':dubbo-remoting:dubbo-remoting-netty4')
+    testImplementation libs.dubboRemotingNetty4
     testImplementation libs.jaxbApi
     testImplementation libs.jaxbRuntime
-    testImplementation project(':dubbo-rpc:dubbo-rpc-triple')
+    testImplementation libs.dubboRpcTriple
     testImplementation libs.protobufJavaUtil
     testImplementation libs.spockCore
     testImplementation libs.log4jSlf4jImpl

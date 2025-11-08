@@ -74,6 +74,9 @@ public class McpServiceFilter {
             }
         }
 
+        // TODO: DubboService.mcpEnabled() method is not available in Dubbo 3.3.5
+        // Uncomment this when upgrading to a version that supports mcpEnabled() annotation attribute
+        /*
         Object serviceBean = providerModel.getServiceInstance();
         if (serviceBean != null) {
             DubboService dubboService = serviceBean.getClass().getAnnotation(DubboService.class);
@@ -81,6 +84,7 @@ public class McpServiceFilter {
                 return true;
             }
         }
+        */
 
         String serviceSpecificKey = McpConstant.SETTINGS_MCP_SERVICE_PREFIX + "." + interfaceName + ".enabled";
         if (configuration.containsKey(serviceSpecificKey)) {

@@ -6,6 +6,13 @@
 
 [versions]
 # ========================================
+# Dubbo Core (从 Maven Central 引入的 Dubbo 核心模块)
+# ========================================
+# 重要：项目版本应与 Dubbo 版本保持同步
+# 当更新此版本时，同时更新 gradle.properties 中的 version
+dubbo = "3.3.5"
+
+# ========================================
 # Spring Ecosystem
 # ========================================
 spring = "5.3.39"
@@ -312,6 +319,24 @@ palantirJavaFormat-jdk11 = "2.28.0"
 palantirJavaFormat-jdk21 = "2.39.0"
 
 [libraries]
+# ========================================
+# Dubbo Core Modules (引用自 Maven Central)
+# ========================================
+dubboCommon = { module = "org.apache.dubbo:dubbo-common", version.ref = "dubbo" }
+dubboRpcApi = { module = "org.apache.dubbo:dubbo-rpc-api", version.ref = "dubbo" }
+dubboRpcDubbo = { module = "org.apache.dubbo:dubbo-rpc-dubbo", version.ref = "dubbo" }
+dubboRpcTriple = { module = "org.apache.dubbo:dubbo-rpc-triple", version.ref = "dubbo" }
+dubboConfigApi = { module = "org.apache.dubbo:dubbo-config-api", version.ref = "dubbo" }
+dubboConfigSpring = { module = "org.apache.dubbo:dubbo-config-spring", version.ref = "dubbo" }
+dubboConfigSpring6 = { module = "org.apache.dubbo:dubbo-config-spring6", version.ref = "dubbo" }
+dubboCluster = { module = "org.apache.dubbo:dubbo-cluster", version.ref = "dubbo" }
+dubboRegistryApi = { module = "org.apache.dubbo:dubbo-registry-api", version.ref = "dubbo" }
+dubboSerializationHessian2 = { module = "org.apache.dubbo:dubbo-serialization-hessian2", version.ref = "dubbo" }
+dubboSerializationFastjson2 = { module = "org.apache.dubbo:dubbo-serialization-fastjson2", version.ref = "dubbo" }
+dubboMetricsDefault = { module = "org.apache.dubbo:dubbo-metrics-default", version.ref = "dubbo" }
+dubboRemotingNetty4 = { module = "org.apache.dubbo:dubbo-remoting-netty4", version.ref = "dubbo" }
+dubboRemotingWebsocket = { module = "org.apache.dubbo:dubbo-remoting-websocket", version.ref = "dubbo" }
+
 # ========================================
 # Code Quality Tools
 # ========================================

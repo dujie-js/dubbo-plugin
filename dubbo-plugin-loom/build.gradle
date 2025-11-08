@@ -18,7 +18,7 @@
 description = 'The Virtual Threads (Loom) integration module for JDK 21+'
 
 dependencies {
-    compileOnly project(':dubbo-common')
+    compileOnly libs.dubboCommon
 }
 
 // Loom requires Java 21+

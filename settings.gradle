@@ -1,5 +1,11 @@
 rootProject.name = 'dubbo-plugin'
 
+// ========================================
+// Dubbo Plugin - Standalone Project
+// ========================================
+// All Dubbo core modules are referenced from Maven Central
+// Versions are managed in gradle/libs.versions.toml
+
 // Plugin modules
 include 'dubbo-qos'
 include 'dubbo-qos-api'

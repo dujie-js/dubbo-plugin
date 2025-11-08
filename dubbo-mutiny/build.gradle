@@ -18,7 +18,7 @@
 description = 'The Mutiny reactive streams integration module'
 
 dependencies {
-    api project(':dubbo-rpc:dubbo-rpc-triple')
+    api libs.dubboRpcTriple
     implementation libs.mutiny
     testImplementation libs.log4jSlf4jImpl
 }
